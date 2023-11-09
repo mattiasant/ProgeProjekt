@@ -2,8 +2,8 @@ import pygame
 
 pygame.init()
 
-width = pygame.display.Info().current_w - 100
-heigth = pygame.display.Info().current_h - 100
+width = pygame.display.Info().current_w
+heigth = pygame.display.Info().current_h
 
 print(width)
 print(heigth)
@@ -39,8 +39,7 @@ while jookseb:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             jookseb = False
-            pygame.quit()
-            break
+
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
@@ -58,13 +57,6 @@ while jookseb:
                 pildix = width / 2
                 pildiy = heigth / 2
 
-            if event.key == pygame.K_q:
-                väike = True
-                suur = False
-            elif event.key == pygame.K_w:
-                suur = True
-                väike = False
-                pygame.display.set_mode((width, heigth))
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 xvahe = 0
