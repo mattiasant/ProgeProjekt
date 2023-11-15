@@ -1,17 +1,14 @@
 import time
 import random
 import pygame
-import sys
-import os
 
-### reaktsioonikiiruse mini-game
+
 def gunslinger():
     pygame.init()
     screen = pygame.display.set_mode((720, 720))
     pygame.display.set_caption("High Noon Time!")
     main_font = pygame.font.SysFont("Comic Sans", 28)
     second_font = pygame.font.SysFont("Roboto", 40)
-
 
     title = main_font.render("Reageeri piisavalt kiiresti, et tulistada El Banditot!", True, "white")
     title_rect = title.get_rect(center=(360, 50))
@@ -41,8 +38,6 @@ def gunslinger():
                     pygame.quit()
                     return reaction_time
 
-
-
         screen.fill("black")
         screen.blit(title, title_rect)
 
@@ -67,6 +62,99 @@ def gunslinger():
 
         pygame.display.update()
 
+def dodge():
+    pygame.init()
+    window_width = 500
+    window_height = 700
+    window = pygame.display.set_mode((window_width, window_height))
+    pygame.display.set_caption("Dodge this!")
+    this_font = pygame.font.SysFont("Comic Sans", 20)
+    maintitle = this_font.render("Liigu vasakule ja paremale, et vältida klotse", True, "black")
+    title_loc = maintitle.get_rect(center=(250, 50))
+
+    WHITE = (255, 255, 255)
+    BLACK = (0, 0, 0)
+
+    #obstacle colours
+    RED = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    YELLOW = (255, 255, 0)
+    BLUE = (0, 0, 255)
+    Obstacle_colours = [RED, GREEN, YELLOW, BLUE]
+
+    player_width = 40
+    player_height = 100
+    player_x = window_width // 2 - player_width // 2
+    player_y = window_height - player_height - 10
+    player_speed = 7
+
+    obstacle_width = 60
+    obstacle_height = 60
+    obstacle_speed = 6
+
+    # Create the player rectangle
+    player = pygame.Rect(player_x, player_y, player_width, player_height)
+
+    obstacles = []
+    def create_obstacle():
+        obstacle_x = random.randint(0, window_width - obstacle_width)
+        obstacle_y = -obstacle_height
+        obstacle = pygame.Rect(obstacle_x, obstacle_y, obstacle_width, obstacle_height)
+        obstacles.append(obstacle)
+    def move_obstacles():
+        for obstacle in obstacles:
+            obstacle.y += obstacle_speed
+            if obstacle.y > window_height:
+                obstacles.remove(obstacle)
+    def check_collision():
+        for obstacle in obstacles:
+            if player.colliderect(obstacle):
+                return True
+        return False
+    def game_loop():
+        running = True
+        clock = pygame.time.Clock()
+        success = 0
+
+        start_time = pygame.time.get_ticks()
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+            #Player movement
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT] and player.x > 0:
+                player.x -= player_speed
+            if keys[pygame.K_RIGHT] and player.x < window_width - player_width:
+                player.x += player_speed
+            if random.random() < 0.05:
+                create_obstacle()
+            move_obstacles()
+            if check_collision():
+                running = False
+            window.fill(WHITE)
+            window.blit(maintitle, title_loc)
+            # Draw the player
+            pygame.draw.rect(window, BLACK, player)
+
+            # Draw the obstacles
+            for obstacle in obstacles:
+                pygame.draw.rect(window, random.choice(Obstacle_colours), obstacle)
+
+            current_time = pygame.time.get_ticks()
+            if current_time - start_time >= 12000:
+                success += 1
+                running = False
+
+            pygame.display.update()
+            clock.tick(60)
+        pygame.quit()
+        return success
+
+    if game_loop() == 1:
+        return "Success"
+    else:
+        return "Fail"
 
 while True:
     valik = str(input("Mis raskustaset soovite? (tavaline/põrgu) ")).lower()
@@ -87,11 +175,11 @@ while True:
 time.sleep(1)  ### Siin on lihtsalt intro
 print("Teil on", elud, "elu")
 time.sleep(2)
-print("Te ärkate keset kõrbe, kuuma päikese all.")
+print("Te ärkate keset kõrbe kuuma päikese all.")
 time.sleep(3)
 print("Te ei tea kus te täpselt olete, aga hakkate rändama, et leida vastuseid.")
 time.sleep(4)
-print("Te olete rändur oma paremates aastates, kes on avastamas metsikut Läänt Ameerikas, aastal 1899.")
+print("Te olete rändur oma parimates aastates, kes on avastamas metsikut Läänt Ameerikas, aastal 1899.")
 time.sleep(5)
 print("Teil on ka revolver, millel on", lasud, "lask(u).")
 
@@ -101,16 +189,16 @@ print()
 time.sleep(3)
 
 
-### Mängu põhi loogika  on siin
+### Mängu põhi loogika on siin
 wave = 0
 while elud > 0:
     print("Kõndisid kõrbes ja ", end="")
     olukord = random.randint(1, 10)
-    if olukord == 1 or olukord == 3 or olukord == 5 or olukord == 10:
+    if olukord == 1 or olukord == 5:
         print("näed põõsast, mille sees on kahtlane olend.....")
         time.sleep(3)
         print()
-        if random.randint(1, 2) == 1:
+        if random.randint(1, 6) == 1:
             if lasud == 0 and valik == "põrgu":
                 print("Välja hüppas kobra, kes hammustas teid nii, et kaotasite 1 elu.")
                 elud -= 1
@@ -133,17 +221,23 @@ while elud > 0:
                 if lasud > 0:
                     lasud -= lasud1
         else:
-            print("Pistad pea põõsa sisse ja ei näinud midagi huvitavat, võib-olla kuumusega näete luulusi.")
+            print("Pistad pea põõsasse ja ei näinud mitte midagi huvitavat, võib-olla kuumusega näete luulusi.")
             print()
             time.sleep(3)
             wave += 1
-    elif olukord == 2:
-        print("uurisid lendavad kotkast taevas ja selletõttu kõndisid kaktusele otsa ja kaotasid 1 elu.")
-        elud -= 1
-        wave += 1
+    elif olukord == 2 or olukord == 3 or olukord == 10:
+        print("uurisite lendavat kotkast")
+        väärtus = dodge()
+        if väärtus == "Success":
+            wave += 1
+            print("Uurides lendavat kotkast taevas oleksite peaaegu kaktusele otsa kõndinud, aga õnneks teil olid kiired jalad")
+        elif väärtus == "Fail":
+            elud -= 1
+            wave += 1
+            print("Uurides lendavat kotkast taevas kõndisite kaktusele otsa ja kaotasite 1 elu.")
         print()
         time.sleep(3)
-    elif olukord == 4 or olukord == 6 or olukord == 7 or olukord == 8:
+    elif olukord == 4 or olukord == 6 or olukord == 8:
         print("Karavan sõitis teist mõõda ja sealt hüppas välja El Bandito")
         print()
         time.sleep(3)
@@ -162,22 +256,25 @@ while elud > 0:
             wave += 1
             elud -= 2
         time.sleep(2)
-    elif olukord == 9 or olukord == 2:
+    elif olukord == 9 or olukord == 2 or olukord == 7:
         if valik == "tavaline":
             print("Karavan sõitis teist mõõda ja sealt kukkus maha seljakott")
             print()
             time.sleep(2)
-            print('Seljakotis leidsite kuule')
+            print('Seljakotist leidsite süüa ja moona')
             lasud2 = random.randint(2, 3)
             lasud += lasud2
+            elud += 1
             wave += 1
         else:
             print("Karavan sõitis teist mõõda ja sealt kukkus maha seljakott")
             print()
             time.sleep(2)
-            print('Seljakotis leidsite toitu, mis annab teile 1 elu juurde')
+            print('Seljakotist leidsite üksikud padrunid')
+            lasud2 = random.randint(1, 2)
+            lasud += lasud2
             wave += 1
-            elud += 1
+
 
     print("Nüüd on teil " + str(elud) + " elu, " + str(lasud) + " lask(u) ja olete ellu jäänud " + str(
         wave) + " round(i)")
