@@ -20,14 +20,15 @@ introjooks = True
 kysievent = False
 olukord = ''
 tmain = None
+hasrun=False
 
 niki = pygame.mixer.Sound('RomanHolidayNickiMinaj.mp3')
 kaktus = pygame.mixer.Sound('MarioFall.mp3')
 bandito = pygame.mixer.Sound('USAAnthemModified.mp3')
 
-pygame.mixer.Sound.set_volume(niki, 0.4)
-pygame.mixer.Sound.set_volume(kaktus, 0.8)
-pygame.mixer.Sound.set_volume(bandito, 0.4)
+pygame.mixer.Sound.set_volume(niki, 0.1) #0.4
+pygame.mixer.Sound.set_volume(kaktus, 0.1) #0.8
+pygame.mixer.Sound.set_volume(bandito, 0.1) #0.4
 
 # Terminal properties
 TERMINAL_ROWS = HEIGHT // FONT_SIZE
@@ -46,6 +47,7 @@ font = pygame.font.Font(FONT_NAME, FONT_SIZE)
 terminal_lines = []
 event_lines = []
 all_lines = []
+inventory = {}
 
 # Cursor variables
 cursor_visible = True
@@ -77,7 +79,6 @@ def ol1():
     if time.time() - t1 >= 5:
         olukord = -1
         väärtus = väldi()
-        # print(väärtus)
         if väärtus == 'Success':
             return 'pos'
             # all_lines.append(
@@ -104,15 +105,28 @@ while running:
                 if difficulty == 'default':
                     if input_text == 'kerge':
                         difficulty = 'kerge'
+                        inventory['Inventory']=''
+                        inventory['elud']=9
+                        inventory['Louis Vuitton LimitedEdition Gucci collab handbag']=1
+                        inventory['Lasud']=6
                     elif input_text == 'mõõdukas':
                         difficulty = 'mõõdukas'
+                        inventory['Inventory'] = ''
+                        inventory['elud'] = 5
+                        inventory['Louis Vuitton LimitedEdition Gucci collab handbag'] = 1
+                        inventory['Lasud'] = 3
                     elif input_text == 'AAR':
                         difficulty = 'põrgu'
+                        inventory['Inventory'] = ''
+                        inventory['elud'] = 3
+                        inventory['Louis Vuitton LimitedEdition Gucci collab handbag'] = 1
+                        inventory['Lasud'] = 0
                     if difficulty != 'default':
                         kysievent = True
                         kysieventolukord = True
                         y += FONT_SIZE + 5
 
+                hasrun=True
                 if input_text == 'exit' or input_text == 'logout':
                     running = False
                 input_text = ""
@@ -120,6 +134,9 @@ while running:
                 input_text = input_text[:-1]
             else:
                 input_text += event.unicode
+
+    if hasrun==True and inventory['elud'] <= 0:
+        running=False
 
     # Clear the screen
     screen.fill(BACKGROUND_COLOR)
@@ -146,6 +163,7 @@ while running:
         elif t0 != None and time.time() - t0 >= 4 and rand0 == 2:
             final_lines.append(('Põõsast hüppas välja Nicki Minaj ja viskas ühe anaconda sulle näkku. -1 HP', True))
             pygame.mixer.Sound.play(niki, 0, 0, 0)
+            inventory['elud'] = inventory['elud'] -1
             t0 = None
             olukord = -1
             tmain = time.time() + 4
@@ -155,7 +173,6 @@ while running:
             final_lines.append((narrator_lines[1], True))
             kysievent = False
         vaartus = ol1()
-        print(vaartus)
         if vaartus == 'pos':
             final_lines.append(
                 (
@@ -164,6 +181,7 @@ while running:
         elif vaartus == 'neg':
             final_lines.append(("Uurides lendavat kotkast taevas kõndisite kaktusele otsa ja kaotasite 1 elu.", True))
             pygame.mixer.Sound.play(kaktus)
+            inventory['elud'] = inventory['elud']-1
         # y += FONT_SIZE + 5
         tmain = time.time() + 3
         # olukord = -1
@@ -176,12 +194,23 @@ while running:
             aeg = gunslinger()
             if aeg <= 500:
                 final_lines.append(('Lasite el banditot, kes sai surma. -9999999999999999 social credit', True))
+                try:
+                    inventory['Social Credit'] = inventory['Social Credit'] -9999999999999999
+                except:
+                    inventory['Social Credit'] = -9999999999999999
                 pygame.mixer.Sound.play(bandito, 0, 0, 0)
                 tmain = time.time() + 13
             else:
                 final_lines.append(
                     ('el bandito peksis teid läbi ja võttis teie limited edition louis vuitton käekoti endaga kaasa.' +
                      ' -1 limited edition louis vuitton käekott, +10 emotional damage', True))
+                try:
+                    inventory['Emotional Damage'] = inventory['Emotional Damage'] + 10
+
+                except:
+                    inventory['Emotional Damage'] = 10
+                inventory['Louis Vuitton LimitedEdition Gucci collab handbag'] = inventory['Louis Vuitton LimitedEdition Gucci collab handbag'] - 1
+                inventory['elud'] = inventory['elud'] -2
                 tmain = time.time()
             olukord = -1
 
@@ -197,6 +226,13 @@ while running:
     screen.blit(luser_surface, (16, HEIGHT - 16 - FONT_SIZE))
 
     # Blit terminal content
+    invy=400
+    for item in inventory:
+
+        inv_surface = font.render(f'{item}: {inventory[item]}', True, TEXT_COLOR)
+        screen.blit(inv_surface,(800,invy))
+        invy+=5+FONT_SIZE
+
     for line in final_lines:
         if line[1] == True:
             user_surface = font.render('C:\\Users\Alexa>', True, TEXT_COLOR)
@@ -224,6 +260,19 @@ while running:
         pygame.draw.rect(screen, TEXT_COLOR, cursor_rect)
 
     pygame.display.flip()
+
+else:
+    texit = time.time()
+    screen.fill(BACKGROUND_COLOR)
+    while time.time()-texit<15:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        end_surface=font.render('geim over :(',True,TEXT_COLOR)
+        screen.blit(end_surface, (WIDTH/2,HEIGHT/2))
+        pygame.display.flip()
 
 pygame.quit()
 sys.exit()
