@@ -1,46 +1,29 @@
 import random
-import pygame as pigame
+import pygame
+import setup
 
-pigame.init()
-window_width = 1500
-window_height = 600
-window = pigame.display.set_mode((window_width, window_height))
-pigame.display.set_caption("Dodge this!")
-this_font = pigame.font.SysFont("Comic Sans", 20)
-maintitle = this_font.render("Liigu vasakule ja paremale, et vältida klotse", True, "black")
-title_loc = maintitle.get_rect(center=(250, 50))
+pygame.init()
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-
-#obstacle colours
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-YELLOW = (255, 255, 0)
-BLUE = (0, 0, 255)
-Obstacle_colours = [RED, GREEN, YELLOW, BLUE]
-
-player_width = 40
-player_height = 100
-player_x = window_width // 2 - player_width // 2
-player_y = window_height - player_height - 10
-player_speed = 7
-
-obstacle_width = 60
-obstacle_height = 60
-obstacle_speed = 6
-
-# Create the player rectangle
-player = pigame.Rect(player_x, player_y, player_width, player_height)
-
-obstacles = []
 def väldi():
-    pigame.init()
-    window_width = 1500
-    window_height = 600
-    window = pigame.display.set_mode((window_width, window_height))
-    pigame.display.set_caption("Dodge this!")
-    this_font = pigame.font.SysFont("Comic Sans", 20)
+    pygame.init()
+
+    rez = setup.suurus
+    rez = rez.split(' ')
+    WIDTH = (int(rez[0]))
+    HEIGHT = (int(rez[1]))
+    try:
+        scale = float(setup.scale)
+    except:
+        pass
+
+    if setup.var1.get()==1:
+        HEIGHT
+        window = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN, pygame.SCALED)
+    else:
+        window = pygame.display.set_mode((WIDTH/scale, HEIGHT/scale), pygame.RESIZABLE)
+
+    pygame.display.set_caption("Dodge this!")
+    this_font = pygame.font.SysFont("Comic Sans", 20)
     maintitle = this_font.render("Liigu vasakule ja paremale, et vältida klotse", True, "black")
     title_loc = maintitle.get_rect(center=(250, 50))
 
@@ -56,8 +39,8 @@ def väldi():
 
     player_width = 40
     player_height = 100
-    player_x = window_width // 2 - player_width // 2
-    player_y = window_height - player_height - 10
+    player_x = WIDTH // 2 - player_width // 2
+    player_y = HEIGHT - player_height - 10
     player_speed = 7
 
     obstacle_width = 60
@@ -65,18 +48,18 @@ def väldi():
     obstacle_speed = 6
 
     # Create the player rectangle
-    player = pigame.Rect(player_x, player_y, player_width, player_height)
+    player = pygame.Rect(player_x, player_y, player_width, player_height)
 
     obstacles = []
     def create_obstacle():
-        obstacle_x = random.randint(0, window_width - obstacle_width)
+        obstacle_x = random.randint(0, WIDTH - obstacle_width)
         obstacle_y = -obstacle_height
-        obstacle = pigame.Rect(obstacle_x, obstacle_y, obstacle_width, obstacle_height)
+        obstacle = pygame.Rect(obstacle_x, obstacle_y, obstacle_width, obstacle_height)
         obstacles.append(obstacle)
     def move_obstacles():
         for obstacle in obstacles:
             obstacle.y += obstacle_speed
-            if obstacle.y > window_height:
+            if obstacle.y > HEIGHT:
                 obstacles.remove(obstacle)
     def check_collision():
         for obstacle in obstacles:
@@ -85,19 +68,21 @@ def väldi():
         return False
     def game_loop():
         running = True
-        clock = pigame.time.Clock()
+
+        clock = pygame.time.Clock()
         success = 0
 
-        start_time = pigame.time.get_ticks()
+        start_time = pygame.time.get_ticks()
         while running:
-            for event in pigame.event.get():
-                if event.type == pigame.QUIT:
+            print(player.x,player.y)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
                     running = False
             #Player movement
-            keys = pigame.key.get_pressed()
-            if keys[pigame.K_LEFT] and player.x > 0:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT] and player.x > 0:
                 player.x -= player_speed
-            if keys[pigame.K_RIGHT] and player.x < window_width - player_width:
+            if keys[pygame.K_RIGHT] and player.x < WIDTH - player_width:
                 player.x += player_speed
             if random.random() < 0.05:
                 create_obstacle()
@@ -107,20 +92,20 @@ def väldi():
             window.fill(WHITE)
             window.blit(maintitle, title_loc)
             # Draw the player
-            pigame.draw.rect(window, BLACK, player)
+            pygame.draw.rect(window, BLACK, player)
 
             # Draw the obstacles
             for obstacle in obstacles:
-                pigame.draw.rect(window, random.choice(Obstacle_colours), obstacle)
+                pygame.draw.rect(window, random.choice(Obstacle_colours), obstacle)
 
-            current_time = pigame.time.get_ticks()
+            current_time = pygame.time.get_ticks()
             if current_time - start_time >= 12000:
                 success += 1
                 running = False
 
-            pigame.display.update()
+            pygame.display.update()
             clock.tick(60)
-        #pigame.quit()
+        #pygame.quit()
         return success
 
     if game_loop() == 1:

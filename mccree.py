@@ -1,10 +1,24 @@
 import time
 import random
 import pygame
+import setup
 
 def gunslinger():
     pygame.init()
-    screen = pygame.display.set_mode((1500, 720))
+    rez = setup.suurus
+    rez = rez.split(' ')
+    WIDTH = (int(rez[0]))
+    HEIGHT = (int(rez[1]))
+    try:
+        scale = float(setup.scale)
+    except:
+        pass
+
+    if setup.var1.get()==1:
+        HEIGHT
+        screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN, pygame.SCALED)
+    else:
+        screen = pygame.display.set_mode((WIDTH/scale, HEIGHT/scale), pygame.RESIZABLE)
     pygame.display.set_caption("High Noon Time!")
     main_font = pygame.font.SysFont("Comic Sans", 28)
     second_font = pygame.font.SysFont("Roboto", 40)

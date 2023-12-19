@@ -31,11 +31,6 @@ niki = pygame.mixer.Sound('RomanHolidayNickiMinaj.mp3')
 kaktus = pygame.mixer.Sound('MarioFall.mp3')
 bandito = pygame.mixer.Sound('USAAnthemModified.mp3')
 
-pygame.mixer.Sound.set_volume(niki, 0.1)  # 0.4
-pygame.mixer.Sound.set_volume(kaktus, 0.1)  # 0.8
-pygame.mixer.Sound.set_volume(bandito, 0.1)  # 0.4
-
-
 # Create the Pygame window
 def createscreen(väärtus, laius, korgus):
     global screen
@@ -116,6 +111,14 @@ if setup.setupdone:
     else:
         createscreen(False, WIDTH / scale, HEIGHT / scale)
         fs = False
+    if setup.var2.get() == 1:
+        pygame.mixer.Sound.set_volume(niki, 0.4)  # 0.4
+        pygame.mixer.Sound.set_volume(kaktus, 0.8)  # 0.8
+        pygame.mixer.Sound.set_volume(bandito, 0.4)  # 0.4
+    else:
+        pygame.mixer.Sound.set_volume(niki, 0)
+        pygame.mixer.Sound.set_volume(kaktus, 0)
+        pygame.mixer.Sound.set_volume(bandito, 0)
 
     # Terminal properties
     TERMINAL_ROWS = HEIGHT // FONT_SIZE
@@ -192,7 +195,7 @@ while running:
                 elif not koodrun and event.unicode == 'a':
                     kood += event.unicode
 
-    if hasrun and inventory['elud'] <= 0:
+    if hasrun is True and inventory['elud'] <= 0:
         etime = time.time()
         if time.time() - etime > 5:
             running = False

@@ -24,10 +24,14 @@ def sule():
     global setupdone
     global suurus
     global scale
+    global heli
     scale = sisend.get()
     setupdone = True
     suurus = reso_combo.get()
+    heliväärtus = checkbox
+
     root.destroy()
+
     return True
 
 
@@ -45,7 +49,7 @@ reso_combo = ttk.Combobox(root, values=valikud)
 reso_combo.pack()
 
 vahe()
-label = tk.Label(root, text='Scaling')
+label = tk.Label(root, text='Scaling %')
 label.pack()
 sisend = tk.Entry(root)
 sisend.pack()
