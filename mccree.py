@@ -24,17 +24,17 @@ def gunslinger():
     second_font = pygame.font.SysFont("Roboto", 40)
 
     title = main_font.render("Reageeri piisavalt kiiresti, et tulistada El Banditot!", True, "white")
-    title_rect = title.get_rect(center=(360, 50))
+    title_rect = title.get_rect(center=(WIDTH // 2, (HEIGHT // 2) - 100))
     click_to_start = second_font.render("Vajuta vasakut hiire klõpsu kui valmis", True, "red")
-    click_to_start_rect = click_to_start.get_rect(center=(360, 360))
+    click_to_start_rect = click_to_start.get_rect(center=(WIDTH // 2, HEIGHT // 2))
     waiting = second_font.render("Oota...", True, "black")
-    waiting_rect = waiting.get_rect(center=(360, 360))
+    waiting_rect = waiting.get_rect(center=(WIDTH // 2, HEIGHT // 2))
     click = second_font.render("TULISTA!!!", True, "black")
-    click_rect = click.get_rect(center=(360, 360))
+    click_rect = click.get_rect(center=(WIDTH // 2, HEIGHT // 2))
     score = second_font.render("Speed: 1000 ms", True, "red")
-    score_rect = score.get_rect(center=(360, 360))
-    score_text_below = main_font.render("Vajuta paremat klõpsu, et jätkata", True, "red")
-    score_rect_below = score_text_below.get_rect(center=(360, 400))
+    score_rect = score.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    score_text_below = main_font.render("Vajuta vasakut klõpsu, et jätkata", True, "red")
+    score_rect_below = score_text_below.get_rect(center=(WIDTH // 2, (HEIGHT // 2) + 50))
 
     game_state = "Click to Start"
     start_time, end_time = 0, 0

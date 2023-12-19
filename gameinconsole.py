@@ -234,7 +234,7 @@ while running:
             olukord = -1
             tmain = time.time() + 4
 
-    elif olukord == 1:
+    #elif olukord == 1:
         if kysievent:
             final_lines.append((narrator_lines[1], True))
             kysievent = False
@@ -252,7 +252,7 @@ while running:
         tmain = time.time() + 3
         # olukord = -1
 
-    elif olukord == 2:
+    elif olukord == 1:
         if kysievent:
             kysievent = False
             final_lines.append((narrator_lines[2], True))
