@@ -35,7 +35,7 @@ def väldi():
     GREEN = (0, 255, 0)
     YELLOW = (255, 255, 0)
     BLUE = (0, 0, 255)
-    Obstacle_colours = [RED, GREEN, YELLOW, BLUE]
+    Obstacle_colours = RED
 
     player_width = 40
     player_height = 100
@@ -45,7 +45,7 @@ def väldi():
 
     obstacle_width = 60
     obstacle_height = 60
-    obstacle_speed = 6
+    obstacle_speed = 10
 
     # Create the player rectangle
     player = pygame.Rect(player_x, player_y, player_width, player_height)
@@ -96,7 +96,7 @@ def väldi():
 
             # Draw the obstacles
             for obstacle in obstacles:
-                pygame.draw.rect(window, random.choice(Obstacle_colours), obstacle)
+                pygame.draw.rect(window, RED, obstacle)
 
             current_time = pygame.time.get_ticks()
             if current_time - start_time >= 12000:

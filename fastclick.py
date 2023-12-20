@@ -27,7 +27,7 @@ def kiireclick():
     WHITE = (255, 255, 255)
     RED = (255, 0, 0)
     game_time = 7
-    pygame.display.set_caption("Fast click")
+    pygame.display.set_caption("rulli rulli liiva sees")
 
     clock = pygame.time.Clock()
 
@@ -57,7 +57,7 @@ def kiireclick():
             if time_left <= 0:
                 game_running = False
 
-            draw_text(f"Time: {time_left:} ms", font, BLACK, screen, 10, 10)
+            draw_text(f"Aeg: {time_left:} ms", font, BLACK, screen, 10, 10)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -75,13 +75,13 @@ def kiireclick():
 
 
         # Display click count
-            draw_text(f"Clicks: {click_count}", font, BLACK, screen, 10, 50)
+            draw_text(f"klõpse: {click_count}", font, BLACK, screen, 10, 50)
 
             pygame.display.flip()
             clock.tick(FPS)
         if click_count < 25:
             return "Fail"
-        else:
+        elif click_count >= 25:
             return "Success"
         pygame.quit()
 

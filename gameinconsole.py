@@ -28,9 +28,9 @@ tmain = None
 koodrun = False
 hasrun = False
 
-niki = pygame.mixer.Sound('RomanHolidayNickiMinaj.mp3')
-kaktus = pygame.mixer.Sound('MarioFall.mp3')
-bandito = pygame.mixer.Sound('USAAnthemModified.mp3')
+kobra = pygame.mixer.Sound('Chomp.wav')
+kaktus = pygame.mixer.Sound('OOF.wav')
+bandito = pygame.mixer.Sound('elbandito.wav')
 
 # Create the Pygame window
 def createscreen(väärtus, laius, korgus):
@@ -63,17 +63,18 @@ cursor_last_toggle = time.time()
 final_lines = [
     ("Ärkate keset kõrbe, kuuma päikese all.", True),
     ("Te ei tea kus te täpselt olete, aga hakkate rändama, et leida vastuseid.", True),
-    ("Olete rändur oma paremates aastates, avastamas metsikut Läänt, aastal 1899.", True),
-    ("Valige raskusaste: kerge/mõõdukas/AAR", True)
+    ("Olete gunslinger oma paremates aastates, avastamas metsikut Läänt, aastal 1899.", True),
+    ("Valige raskusaste: kerge/mõõdukas", True)
 ]
 
 # Narrator messages
 narrator_lines = [
-    'Näed sahisevat põõsast... paistab, et kaisteväelaste maskeering on alla käinud...',
-    'Näed taevas lendavat lindu, või on see hoopis lennuk?',
-    'Karavan sõitis teist mõõda ja sealt hüppas välja el bandito kellel oli pew pew ja ta tahab sind siit ilmast pagendada',
-    'Vajuta 8 või rohkem ruutu, et mitte elu kaotada',
-    'vajuta nuppu võimalikult kiiresti!'
+    'Näed sahisevat põõsast... paistab nagu keegi või miski oleks seal sees.',
+    'Näed taevas lendavat lindu, või on see hoopis lendav siga?',
+    'Karavan sõitis teist mõõda ja sealt hüppas välja El Bandito',
+    'Järsku kukkusite väiksesse orgu, kus on skorpionid! Astuge neile peale, et mitte saada nõelata!',
+    'Oh ei! Te astusite vesiliiva sisse, roomage nüüd välja enne kui te uppute!',
+    'Karavan sõitis teist mõõda ja sealt kukkus maha seljakott'
 ]
 # Main loop
 running = False
@@ -90,12 +91,9 @@ def ol1():
         väärtus = väldi()
         if väärtus == 'Success':
             return 'pos'
-            # all_lines.append(
-            #    "Uurides lendavat kotkast taevas oleksite peaaegu kaktusele otsa kõndinud, aga õnneks teil olid kiired jalad")
 
         elif väärtus == 'Fail':
             return 'neg'
-            # all_lines.append("Uurides lendavat kotkast taevas kõndisite kaktusele otsa ja kaotasite 1 elu.")
 
 def ol2():
     global olukord
@@ -135,11 +133,11 @@ if setup.setupdone:
         createscreen(False, WIDTH / scale, HEIGHT / scale)
         fs = False
     if setup.var2.get() == 1:
-        pygame.mixer.Sound.set_volume(niki, 0.4)  # 0.4
+        pygame.mixer.Sound.set_volume(kobra, 0.4)  # 0.4
         pygame.mixer.Sound.set_volume(kaktus, 0.8)  # 0.8
         pygame.mixer.Sound.set_volume(bandito, 0.4)  # 0.4
     else:
-        pygame.mixer.Sound.set_volume(niki, 0)
+        pygame.mixer.Sound.set_volume(kobra, 0)
         pygame.mixer.Sound.set_volume(kaktus, 0)
         pygame.mixer.Sound.set_volume(bandito, 0)
 
@@ -175,21 +173,13 @@ while running:
                     if input_text == 'kerge':
                         difficulty = 'kerge'
                         inventory['Inventory'] = ''
-                        inventory['elud'] = 9
-                        inventory['Louis Vuitton LimitedEdition Gucci collab handbag'] = 1
-                        inventory['Lasud'] = 6
+                        inventory['elud'] = 6
+                        inventory['Lasud'] = random.randint(3, 6)
                     elif input_text == 'mõõdukas':
                         difficulty = 'mõõdukas'
                         inventory['Inventory'] = ''
-                        inventory['elud'] = 5
-                        inventory['Louis Vuitton LimitedEdition Gucci collab handbag'] = 1
-                        inventory['Lasud'] = 3
-                    elif input_text == 'AAR':
-                        difficulty = 'põrgu'
-                        inventory['Inventory'] = ''
                         inventory['elud'] = 3
-                        inventory['Louis Vuitton LimitedEdition Gucci collab handbag'] = 1
-                        inventory['Lasud'] = 0
+                        inventory['Lasud'] = random.randint(1, 3)
                     if difficulty != 'default':
                         kysievent = True
                         kysieventolukord = True
@@ -220,6 +210,7 @@ while running:
 
     if hasrun is True and inventory['elud'] <= 0:
         etime = time.time()
+        running = False
         if time.time() - etime > 5:
             running = False
     if not koodrun and hasrun is True and input_text == 'ba':
@@ -237,7 +228,7 @@ while running:
         t2 = time.time()
         # olukord_surface = font.render('C:\\Users\Alexa>', True, TEXT_COLOR)
         # screen.blit(olukord_surface, (TERMINAL_MARGIN, y))
-        olukord = random.randint(0, 4)
+        olukord = random.randint(0, 5)
 
     if olukord == 0:
         if kysievent:
@@ -250,11 +241,21 @@ while running:
             tmain = time.time()
             olukord = -1
         elif t0 is not None and time.time() - t0 >= 4 and rand0 == 2:
-            final_lines.append(('Põõsast hüppas välja Nicki Minaj ja viskas ühe anaconda sulle näkku. -1 HP', True))
-            pygame.mixer.Sound.play(niki, 0, 0, 0)
+            final_lines.append(('Põõsast hüppas välja kobra, kes hammustas teid ja kaotasite 1 elu', True))
+            pygame.mixer.Sound.play(kobra, 0, 0, 0)
             inventory['elud'] = inventory['elud'] - 1
             t0 = None
             olukord = -1
+            tmain = time.time() + 4
+
+    if olukord == 5:
+        if kysievent:
+            kysievent = False
+            final_lines.append((narrator_lines[5], True))
+            final_lines.append(('Seljakotist leidsite süüa ja moona', True))
+            olukord = -1
+            inventory['elud'] = inventory['elud'] + (random.randint(1, 2))
+            inventory['Lasud'] = inventory['Lasud'] + (random.randint(1, 2))
             tmain = time.time() + 4
 
     elif olukord == 1:
@@ -272,7 +273,7 @@ while running:
             pygame.mixer.Sound.play(kaktus)
             inventory['elud'] = inventory['elud'] - 1
         # y += FONT_SIZE + 5
-        tmain = time.time() + 3
+        tmain = time.time() + 4
         # olukord = -1
 
     elif olukord == 3:
@@ -283,14 +284,14 @@ while running:
         if vaartus == 'pos':
             final_lines.append(
                 (
-                    "Saite 8 või rohkem ruutu ja seega ei kaota elu",
+                    "Suutsite kõik skorpionid surnuks astuda",
                     True))
         elif vaartus == 'neg':
-            final_lines.append(("Saite alla 8 ruudu ja kaotasite 1 elu", True))
+            final_lines.append(("Mingid skorpionid jäid ikka ellu ja said nõelata nii, et kaotasid 1 elu", True))
             pygame.mixer.Sound.play(kaktus)
             inventory['elud'] = inventory['elud'] - 1
         # y += FONT_SIZE + 5
-        tmain = time.time() + 3
+        tmain = time.time() + 4
         # olukord = -1
 
     elif olukord == 4:
@@ -300,15 +301,13 @@ while running:
         vaartus = ol3()
         if vaartus == 'pos':
             final_lines.append(
-                (
-                    "vajutasite piisavalt kiirest",
-                    True))
+                ("Tõmbasite ennast edukalt vesiliivast välja!", True))
         elif vaartus == 'neg':
-            final_lines.append(("vajutasite liiga vähe ja saite surma", True))
+            final_lines.append(("Pingutasite liiga vähe ja vesiliiv sai teist jagu ning uppusite ära", True))
             pygame.mixer.Sound.play(kaktus)
             inventory['elud'] = inventory['elud'] - inventory['elud']
         # y += FONT_SIZE + 5
-        tmain = time.time() + 3
+        tmain = time.time() + 4
         # olukord = -1
 
     elif olukord == 2:
@@ -318,26 +317,19 @@ while running:
         if time.time() - t2 >= 5:
             aeg = gunslinger()
             if aeg <= 500:
-                final_lines.append(('Lasite el banditot, kes sai surma. -9999999999999999 social credit', True))
-                try:
-                    inventory['Social Credit'] = inventory['Social Credit'] - 9999999999999999
-                except:
-                    inventory['Social Credit'] = -9999999999999999
+                final_lines.append(('Lasite El Bandito surnuks', True))
                 pygame.mixer.Sound.play(bandito, 0, 0, 0)
-                tmain = time.time() + 13
+                inventory['Lasud'] = inventory['Lasud'] - 1
+                tmain = time.time() + 8
+            elif aeg <= 500 and inventory['Lasud'] != 0:
+                final_lines.append(('El Bandito peksis teid läbi, sest teil polnud kuule', True))
+                inventory['elud'] = inventory['elud'] - 2
+                tmain = time.time() + 3
             else:
                 final_lines.append(
-                    ('el bandito peksis teid läbi ja võttis teie limited edition louis vuitton käekoti endaga kaasa.' +
-                     ' -1 limited edition louis vuitton käekott, +10 emotional damage', True))
-                try:
-                    inventory['Emotional Damage'] = inventory['Emotional Damage'] + 10
-
-                except:
-                    inventory['Emotional Damage'] = 10
-                inventory['Louis Vuitton LimitedEdition Gucci collab handbag'] = inventory[
-                                                                                     'Louis Vuitton LimitedEdition Gucci collab handbag'] - 1
+                    ('El Bandito peksis teid läbi', True))
                 inventory['elud'] = inventory['elud'] - 2
-                tmain = time.time()
+                tmain = time.time() + 2
             olukord = -1
 
     if olukord == -1 and tmain is not None and time.time() - tmain >= 5:
@@ -406,7 +398,7 @@ else:
                 quit()
 
         end_surface = fontsuur.render('geim over :(', True, TEXT_COLOR)
-        screen.blit(end_surface, (WIDTH / 2, HEIGHT / 2))
+        screen.blit(end_surface, ((WIDTH / 2) - 100, HEIGHT / 2))
         pygame.display.flip()
 
 pygame.quit()
