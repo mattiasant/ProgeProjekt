@@ -1,13 +1,17 @@
 import random
 import sys
 import time
-import pygame
+
 import emojis
+import pygame
+import pyautogui
+
 import setup
-from dodge import väldi
-from mccree import gunslinger
 from clicker import aimlab
+from dodge import väldi
 from fastclick import kiireclick
+from mccree import gunslinger
+
 # Initialize Pygame
 
 # Constants
@@ -17,8 +21,10 @@ TEXT_COLOR = (255, 255, 255)
 FONT_SIZE = 16
 FONT_NAME = 'SpaceMono-Regular.ttf'
 TERMINAL_MARGIN = 16
+SCROLL_SPEED = 20
+scroll_y = 0
+min_scroll_y = 0  # Define the minimum scroll value
 
-# TKINTER
 
 
 introjooks = True
@@ -32,18 +38,6 @@ kobra = pygame.mixer.Sound('Chomp.wav')
 kaktus = pygame.mixer.Sound('OOF.wav')
 bandito = pygame.mixer.Sound('elbandito.wav')
 
-# Create the Pygame window
-def createscreen(väärtus, laius, korgus):
-    global screen
-    print(WIDTH, HEIGHT)
-    if väärtus:
-        screen = pygame.display.set_mode((laius, korgus), pygame.FULLSCREEN, pygame.SCALED)
-    else:
-        screen = pygame.display.set_mode((laius, korgus), pygame.RESIZABLE)
-    pygame.display.set_caption(
-        emojis.encode('veri e:b:ik geim @alo palun anna meile max punktid :pleading_face::point_right::point_left:'))
-    pygame.display.set_icon(pygame.image.load("removingthepolishwithchemicals.png"))
-
 
 # Define a font
 font = pygame.font.Font(FONT_NAME, FONT_SIZE)
@@ -52,7 +46,6 @@ fontsuur = pygame.font.Font(FONT_NAME, 72)
 # Terminal content
 terminal_lines = []
 event_lines = []
-all_lines = []
 inventory = {}
 
 # Cursor variables
@@ -73,7 +66,7 @@ narrator_lines = [
     'Näed taevas lendavat lindu, või on see hoopis lendav siga?',
     'Karavan sõitis teist mõõda ja sealt hüppas välja El Bandito',
     'Järsku kukkusite väiksesse orgu, kus on skorpionid! Astuge neile peale, et mitte saada nõelata!',
-    'Oh ei! Te astusite vesiliiva sisse, roomage nüüd välja enne kui te uppute!',
+    'Oh ei! Te astusite vesiliiva sisse, roomake nüüd välja enne kui te upute!',
     'Karavan sõitis teist mõõda ja sealt kukkus maha seljakott'
 ]
 # Main loop
@@ -118,20 +111,19 @@ def ol3():
 
 if setup.setupdone:
 
-    rez = setup.suurus
-    rez = rez.split(' ')
-    WIDTH = (int(rez[0]))
-    HEIGHT = (int(rez[1]))
-    try:
-        scale = float(setup.scale)
-    except:
-        pass
-    if setup.var1.get() == 1:
-        createscreen(True, WIDTH, HEIGHT)
-        fs = True
+    if setup.var1.get()==1:
+        WIDTH = pyautogui.size()[0]
+        HEIGHT = pyautogui.size()[1]
+        screen = pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
+
     else:
-        createscreen(False, WIDTH / scale, HEIGHT / scale)
-        fs = False
+        WIDTH=800
+        HEIGHT=600
+        screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+    pygame.display.set_caption(emojis.encode('veri e:b:ik geim @alo palun anna meile max punktid :pleading_face::point_right::point_left:'))
+    pygame.display.set_icon(pygame.image.load("removingthepolishwithchemicals.png"))
+
     if setup.var2.get() == 1:
         pygame.mixer.Sound.set_volume(kobra, 0.4)  # 0.4
         pygame.mixer.Sound.set_volume(kaktus, 0.8)  # 0.8
@@ -149,6 +141,8 @@ if setup.setupdone:
 
     running = True
 
+input_rect = pygame.Rect(0, HEIGHT - 90, WIDTH, 90)
+
 while running:
 
     for event in pygame.event.get():
@@ -156,14 +150,21 @@ while running:
             running = False
             pygame.quit()
             quit()
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 4:  # Scroll up
+                scroll_y += SCROLL_SPEED
+            elif event.button == 5:  # Scroll down
+                scroll_y -= SCROLL_SPEED
+
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
                 pygame.quit()
                 quit()
+
             elif event.key == pygame.K_RETURN:
                 final_lines.append((input_text, False))
-                # y += FONT_SIZE + 5
 
                 if not koodrun:
                     kood = ''
@@ -226,8 +227,6 @@ while running:
         t1 = time.time()
         t0 = time.time()
         t2 = time.time()
-        # olukord_surface = font.render('C:\\Users\Alexa>', True, TEXT_COLOR)
-        # screen.blit(olukord_surface, (TERMINAL_MARGIN, y))
         olukord = random.randint(0, 5)
 
     if olukord == 0:
@@ -264,10 +263,7 @@ while running:
             kysievent = False
         vaartus = ol1()
         if vaartus == 'pos':
-            final_lines.append(
-                (
-                    "Uurides lendavat kotkast taevas oleksite peaaegu kaktusele otsa kõndinud, aga õnneks teil olid kiired jalad",
-                    True))
+            final_lines.append(("Uurides lendavat kotkast taevas oleksite peaaegu kaktusele otsa kõndinud, aga õnneks teil olid kiired jalad",True))
         elif vaartus == 'neg':
             final_lines.append(("Uurides lendavat kotkast taevas kõndisite kaktusele otsa ja kaotasite 1 elu.", True))
             pygame.mixer.Sound.play(kaktus)
@@ -336,46 +332,64 @@ while running:
         kysievent = True
         tmain = None
 
-    # Combine terminal content and current input lines
-    all_lines = terminal_lines + input_lines + event_lines
+    pygame.display.set_caption(emojis.encode('veri e:b:ik geim @alo palun anna meile max punktid :pleading_face::point_right::point_left:'))
 
-    # Display terminal content
-    luser_surface = font.render("C:\\Users\Glean>", True, TEXT_COLOR)
-    if fs:
-        screen.blit(luser_surface, (16, HEIGHT - 16 - FONT_SIZE - 400))
-    else:
-        screen.blit(luser_surface, (16, HEIGHT - 16 - FONT_SIZE - 400))
 
     # Blit terminal content
-    invy = 400
+    invy = HEIGHT- 4* (FONT_SIZE+5)
     for item in inventory:
         inv_surface = font.render(f'{item}: {inventory[item]}', True, TEXT_COLOR)
-        screen.blit(inv_surface, (800, invy))
+        screen.blit(inv_surface, (400, invy))
         invy += 5 + FONT_SIZE
 
+
+
+    y=TERMINAL_MARGIN + scroll_y
     for line in final_lines:
         if line[-1]:
             user_surface = font.render('C:\\Users\Alexa>', True, TEXT_COLOR)
             screen.blit(user_surface, (TERMINAL_MARGIN, y))
-        elif line[-1] is None:
-            user_surface = font.render('C:\\System', True, TEXT_COLOR)
-            screen.blit(user_surface, (TERMINAL_MARGIN, y))
         else:
             user_surface = font.render('C:\\Users\Glean>', True, TEXT_COLOR)
             screen.blit(user_surface, (TERMINAL_MARGIN, y))
-        try:
-            text_surface = font.render(line[0], True, TEXT_COLOR)
-        except:
-            text_surface = font.render(str(line[0:-1]), True, TEXT_COLOR)
-        screen.blit(text_surface, (TERMINAL_MARGIN + 160, y))
-        y += FONT_SIZE + 5
+
+        words = line[0].split()  # Split the text into words
+        current_line = ''  # Store the current line being constructed
+
+        for word in words:
+            test_line = current_line + word + ' '
+            text_surface = font.render(test_line, True, TEXT_COLOR)
+            text_width, _ = font.size(test_line)
+
+            if text_width <= WIDTH - TERMINAL_MARGIN * 2 - 160:
+                current_line = test_line
+            else:
+
+                screen.blit(font.render(current_line, True, TEXT_COLOR), (TERMINAL_MARGIN + 160, y))
+                current_line = word + ' '
+                y += FONT_SIZE + 5  # Move to the next line
+
+        if current_line != '':
+            screen.blit(font.render(current_line, True, TEXT_COLOR), (TERMINAL_MARGIN + 160, y))
+            y += FONT_SIZE + 5  # Move to the next line for the remaining text
+
+        y += FONT_SIZE + 5  # Move to the next line for the next entry
+
+    pygame.draw.rect(screen, (0, 0, 0), input_rect)
+
+    invy = HEIGHT- 4* (FONT_SIZE+5)
+    for item in inventory:
+        inv_surface = font.render(f'{item}: {inventory[item]}', True, TEXT_COLOR)
+        screen.blit(inv_surface, (400, invy))
+        invy += 5 + FONT_SIZE
+
+    # Display terminal content
+    luser_surface = font.render("C:\\Users\Glean>", True, TEXT_COLOR)
+    screen.blit(luser_surface, (16, HEIGHT - 16 - FONT_SIZE))
 
     # Display the current input text
     input_surface = font.render(input_text, True, TEXT_COLOR)
-    if fs:
-        screen.blit(input_surface, (TERMINAL_MARGIN + 160, HEIGHT - 16 - FONT_SIZE - 400))
-    else:
-        screen.blit(input_surface, (TERMINAL_MARGIN + 160, HEIGHT - 16 - FONT_SIZE - 400))
+    screen.blit(input_surface, (TERMINAL_MARGIN + 160, HEIGHT - 16 - FONT_SIZE))
     # Cursor blink
     if time.time() - cursor_last_toggle >= CURSOR_BLINK_INTERVAL:
         cursor_visible = not cursor_visible
@@ -391,14 +405,15 @@ while running:
 else:
     texit = time.time()
     screen.fill(BACKGROUND_COLOR)
+    lopp = fontsuur.render("Geim over :(", True, TEXT_COLOR)
+    lopp_rect = lopp.get_rect(center=(WIDTH // 2, HEIGHT // 2))
     while time.time() - texit < 15:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
 
-        end_surface = fontsuur.render('geim over :(', True, TEXT_COLOR)
-        screen.blit(end_surface, ((WIDTH / 2) - 100, HEIGHT / 2))
+        screen.blit(lopp, lopp_rect)
         pygame.display.flip()
 
 pygame.quit()

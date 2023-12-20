@@ -1,26 +1,23 @@
 import random
 import pygame
 import setup
+import pyautogui
+
 
 pygame.init()
 
 def väldi():
     pygame.init()
 
-    rez = setup.suurus
-    rez = rez.split(' ')
-    WIDTH = (int(rez[0]))
-    HEIGHT = (int(rez[1]))
-    try:
-        scale = float(setup.scale)
-    except:
-        pass
-
     if setup.var1.get()==1:
-        HEIGHT
-        window = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN, pygame.SCALED)
+        WIDTH = pyautogui.size()[0]
+        HEIGHT = pyautogui.size()[1]
+        window = pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
+
     else:
-        window = pygame.display.set_mode((WIDTH/scale, HEIGHT/scale), pygame.RESIZABLE)
+        WIDTH=800
+        HEIGHT=600
+        window = pygame.display.set_mode((WIDTH, HEIGHT))
 
     pygame.display.set_caption("Dodge this!")
     this_font = pygame.font.SysFont("Comic Sans", 20)
