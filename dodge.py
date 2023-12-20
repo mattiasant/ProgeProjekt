@@ -3,20 +3,20 @@ import pygame
 import setup
 import pyautogui
 
-
 pygame.init()
+
 
 def väldi():
     pygame.init()
 
-    if setup.var1.get()==1:
+    if setup.var1.get() == 1:
         WIDTH = pyautogui.size()[0]
         HEIGHT = pyautogui.size()[1]
-        window = pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
+        window = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 
     else:
-        WIDTH=800
-        HEIGHT=600
+        WIDTH = 800
+        HEIGHT = 600
         window = pygame.display.set_mode((WIDTH, HEIGHT))
 
     pygame.display.set_caption("Dodge this!")
@@ -27,12 +27,9 @@ def väldi():
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
 
-    #obstacle colours
+    # obstacle colours
     RED = (255, 0, 0)
-    GREEN = (0, 255, 0)
-    YELLOW = (255, 255, 0)
-    BLUE = (0, 0, 255)
-    Obstacle_colours = RED
+
 
     player_width = 40
     player_height = 100
@@ -48,21 +45,25 @@ def väldi():
     player = pygame.Rect(player_x, player_y, player_width, player_height)
 
     obstacles = []
+
     def create_obstacle():
         obstacle_x = random.randint(0, WIDTH - obstacle_width)
         obstacle_y = -obstacle_height
         obstacle = pygame.Rect(obstacle_x, obstacle_y, obstacle_width, obstacle_height)
         obstacles.append(obstacle)
+
     def move_obstacles():
         for obstacle in obstacles:
             obstacle.y += obstacle_speed
             if obstacle.y > HEIGHT:
                 obstacles.remove(obstacle)
+
     def check_collision():
         for obstacle in obstacles:
             if player.colliderect(obstacle):
                 return True
         return False
+
     def game_loop():
         running = True
 
@@ -71,11 +72,10 @@ def väldi():
 
         start_time = pygame.time.get_ticks()
         while running:
-            print(player.x,player.y)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-            #Player movement
+            # Player movement
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT] and player.x > 0:
                 player.x -= player_speed
@@ -102,7 +102,6 @@ def väldi():
 
             pygame.display.update()
             clock.tick(60)
-        #pygame.quit()
         return success
 
     if game_loop() == 1:

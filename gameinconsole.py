@@ -12,10 +12,7 @@ from dodge import väldi
 from fastclick import kiireclick
 from mccree import gunslinger
 
-# Initialize Pygame
-
 # Constants
-# WIDTH, HEIGHT = 900, 600
 BACKGROUND_COLOR = (0, 0, 0)
 TEXT_COLOR = (255, 255, 255)
 FONT_SIZE = 16
@@ -24,8 +21,6 @@ TERMINAL_MARGIN = 16
 SCROLL_SPEED = 20
 scroll_y = 0
 min_scroll_y = 0  # Define the minimum scroll value
-
-
 
 introjooks = True
 kysievent = False
@@ -37,7 +32,6 @@ hasrun = False
 kobra = pygame.mixer.Sound('Chomp.wav')
 kaktus = pygame.mixer.Sound('OOF.wav')
 bandito = pygame.mixer.Sound('elbandito.wav')
-
 
 # Define a font
 font = pygame.font.Font(FONT_NAME, FONT_SIZE)
@@ -88,6 +82,7 @@ def ol1():
         elif väärtus == 'Fail':
             return 'neg'
 
+
 def ol2():
     global olukord
     if time.time() - t1 >= 5:
@@ -97,6 +92,7 @@ def ol2():
             return 'pos'
         elif väärtus == 'Fail':
             return 'neg'
+
 
 def ol3():
     global olukord
@@ -111,17 +107,18 @@ def ol3():
 
 if setup.setupdone:
 
-    if setup.var1.get()==1:
+    if setup.var1.get() == 1:
         WIDTH = pyautogui.size()[0]
         HEIGHT = pyautogui.size()[1]
-        screen = pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
+        screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 
     else:
-        WIDTH=800
-        HEIGHT=600
+        WIDTH = 800
+        HEIGHT = 600
         screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-    pygame.display.set_caption(emojis.encode('veri e:b:ik geim @alo palun anna meile max punktid :pleading_face::point_right::point_left:'))
+    pygame.display.set_caption(
+        emojis.encode('veri e:b:ik geim @alo palun anna meile max punktid :pleading_face::point_right::point_left:'))
     pygame.display.set_icon(pygame.image.load("removingthepolishwithchemicals.png"))
 
     if setup.var2.get() == 1:
@@ -184,7 +181,6 @@ while running:
                     if difficulty != 'default':
                         kysievent = True
                         kysieventolukord = True
-                        # y += FONT_SIZE + 5
                         hasrun = True
 
                 if input_text == 'exit' or input_text == 'logout':
@@ -263,14 +259,14 @@ while running:
             kysievent = False
         vaartus = ol1()
         if vaartus == 'pos':
-            final_lines.append(("Uurides lendavat kotkast taevas oleksite peaaegu kaktusele otsa kõndinud, aga õnneks teil olid kiired jalad",True))
+            final_lines.append((
+                               "Uurides lendavat kotkast taevas oleksite peaaegu kaktusele otsa kõndinud, aga õnneks teil olid kiired jalad",
+                               True))
         elif vaartus == 'neg':
             final_lines.append(("Uurides lendavat kotkast taevas kõndisite kaktusele otsa ja kaotasite 1 elu.", True))
             pygame.mixer.Sound.play(kaktus)
             inventory['elud'] = inventory['elud'] - 1
-        # y += FONT_SIZE + 5
         tmain = time.time() + 4
-        # olukord = -1
 
     elif olukord == 3:
         if kysievent:
@@ -278,17 +274,12 @@ while running:
             kysievent = False
         vaartus = ol2()
         if vaartus == 'pos':
-            final_lines.append(
-                (
-                    "Suutsite kõik skorpionid surnuks astuda",
-                    True))
+            final_lines.append(("Suutsite kõik skorpionid surnuks astuda", True))
         elif vaartus == 'neg':
             final_lines.append(("Mingid skorpionid jäid ikka ellu ja said nõelata nii, et kaotasid 1 elu", True))
             pygame.mixer.Sound.play(kaktus)
             inventory['elud'] = inventory['elud'] - 1
-        # y += FONT_SIZE + 5
         tmain = time.time() + 4
-        # olukord = -1
 
     elif olukord == 4:
         if kysievent:
@@ -302,9 +293,7 @@ while running:
             final_lines.append(("Pingutasite liiga vähe ja vesiliiv sai teist jagu ning uppusite ära", True))
             pygame.mixer.Sound.play(kaktus)
             inventory['elud'] = inventory['elud'] - inventory['elud']
-        # y += FONT_SIZE + 5
         tmain = time.time() + 4
-        # olukord = -1
 
     elif olukord == 2:
         if kysievent:
@@ -332,19 +321,17 @@ while running:
         kysievent = True
         tmain = None
 
-    pygame.display.set_caption(emojis.encode('veri e:b:ik geim @alo palun anna meile max punktid :pleading_face::point_right::point_left:'))
-
+    pygame.display.set_caption(
+        emojis.encode('veri e:b:ik geim @alo palun anna meile max punktid :pleading_face::point_right::point_left:'))
 
     # Blit terminal content
-    invy = HEIGHT- 4* (FONT_SIZE+5)
+    invy = HEIGHT - 4 * (FONT_SIZE + 5)
     for item in inventory:
         inv_surface = font.render(f'{item}: {inventory[item]}', True, TEXT_COLOR)
         screen.blit(inv_surface, (400, invy))
         invy += 5 + FONT_SIZE
 
-
-
-    y=TERMINAL_MARGIN + scroll_y
+    y = TERMINAL_MARGIN + scroll_y
     for line in final_lines:
         if line[-1]:
             user_surface = font.render('C:\\Users\Alexa>', True, TEXT_COLOR)
@@ -377,7 +364,7 @@ while running:
 
     pygame.draw.rect(screen, (0, 0, 0), input_rect)
 
-    invy = HEIGHT- 4* (FONT_SIZE+5)
+    invy = HEIGHT - 4 * (FONT_SIZE + 5)
     for item in inventory:
         inv_surface = font.render(f'{item}: {inventory[item]}', True, TEXT_COLOR)
         screen.blit(inv_surface, (400, invy))

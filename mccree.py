@@ -4,17 +4,18 @@ import pygame
 import setup
 import pyautogui
 
+
 def gunslinger():
     pygame.init()
 
-    if setup.var1.get()==1:
+    if setup.var1.get() == 1:
         WIDTH = pyautogui.size()[0]
         HEIGHT = pyautogui.size()[1]
-        screen = pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
+        screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 
     else:
-        WIDTH=800
-        HEIGHT=600
+        WIDTH = 800
+        HEIGHT = 600
         screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
     pygame.display.set_caption("High Noon Time!")
@@ -71,5 +72,3 @@ def gunslinger():
             screen.blit(score_text_below, score_rect_below)
 
         pygame.display.update()
-
-#gunslinger()
