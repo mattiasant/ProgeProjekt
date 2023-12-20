@@ -316,12 +316,12 @@ while running:
             final_lines.append((narrator_lines[2], True))
         if time.time() - t2 >= 5:
             aeg = gunslinger()
-            if aeg <= 500:
+            if aeg <= 500 and inventory['Lasud'] > 0:
                 final_lines.append(('Lasite El Bandito surnuks', True))
                 pygame.mixer.Sound.play(bandito, 0, 0, 0)
                 inventory['Lasud'] = inventory['Lasud'] - 1
                 tmain = time.time() + 8
-            elif aeg <= 500 and inventory['Lasud'] != 0:
+            elif aeg <= 500 and inventory['Lasud'] == 0:
                 final_lines.append(('El Bandito peksis teid läbi, sest teil polnud kuule', True))
                 inventory['elud'] = inventory['elud'] - 2
                 tmain = time.time() + 3

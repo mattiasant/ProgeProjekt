@@ -45,7 +45,7 @@ def väldi():
 
     obstacle_width = 60
     obstacle_height = 60
-    obstacle_speed = 10
+    obstacle_speed = 7
 
     # Create the player rectangle
     player = pygame.Rect(player_x, player_y, player_width, player_height)
