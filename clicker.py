@@ -101,5 +101,3 @@ def aimlab():
     elif score >= 8:
         return "Success"
     pygame.quit()
-
-print(aimlab())
