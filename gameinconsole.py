@@ -7,6 +7,7 @@ import setup
 from dodge import väldi
 from mccree import gunslinger
 from clicker import aimlab
+from fastclick import kiireclick
 # Initialize Pygame
 
 # Constants
@@ -71,7 +72,8 @@ narrator_lines = [
     'Näed sahisevat põõsast... paistab, et kaisteväelaste maskeering on alla käinud...',
     'Näed taevas lendavat lindu, või on see hoopis lennuk?',
     'Karavan sõitis teist mõõda ja sealt hüppas välja el bandito kellel oli pew pew ja ta tahab sind siit ilmast pagendada',
-    'Vajuta 8 või rohkem ruutu, et mitte elu kaotada'
+    'Vajuta 8 või rohkem ruutu, et mitte elu kaotada',
+    'vajuta nuppu võimalikult kiiresti!'
 ]
 # Main loop
 running = False
@@ -102,7 +104,16 @@ def ol2():
         väärtus = aimlab()
         if väärtus == 'Success':
             return 'pos'
+        elif väärtus == 'Fail':
+            return 'neg'
 
+def ol3():
+    global olukord
+    if time.time() - t1 >= 5:
+        olukord = -1
+        väärtus = kiireclick()
+        if väärtus == 'Success':
+            return 'pos'
         elif väärtus == 'Fail':
             return 'neg'
 
@@ -226,7 +237,7 @@ while running:
         t2 = time.time()
         # olukord_surface = font.render('C:\\Users\Alexa>', True, TEXT_COLOR)
         # screen.blit(olukord_surface, (TERMINAL_MARGIN, y))
-        olukord = random.randint(0, 3)
+        olukord = random.randint(0, 4)
 
     if olukord == 0:
         if kysievent:
@@ -278,6 +289,24 @@ while running:
             final_lines.append(("Saite alla 8 ruudu ja kaotasite 1 elu", True))
             pygame.mixer.Sound.play(kaktus)
             inventory['elud'] = inventory['elud'] - 1
+        # y += FONT_SIZE + 5
+        tmain = time.time() + 3
+        # olukord = -1
+
+    elif olukord == 4:
+        if kysievent:
+            final_lines.append((narrator_lines[4], True))
+            kysievent = False
+        vaartus = ol3()
+        if vaartus == 'pos':
+            final_lines.append(
+                (
+                    "vajutasite piisavalt kiirest",
+                    True))
+        elif vaartus == 'neg':
+            final_lines.append(("vajutasite liiga vähe ja saite surma", True))
+            pygame.mixer.Sound.play(kaktus)
+            inventory['elud'] = inventory['elud'] - inventory['elud']
         # y += FONT_SIZE + 5
         tmain = time.time() + 3
         # olukord = -1

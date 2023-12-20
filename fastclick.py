@@ -1,19 +1,32 @@
 import pygame
 import random
 import time
+import setup
 
 def kiireclick():
     pygame.init()
 
+    rez = setup.suurus
+    rez = rez.split(' ')
+    WIDTH = (int(rez[0]))
+    HEIGHT = (int(rez[1]))
+    try:
+        scale = float(setup.scale)
+    except:
+        pass
 
-    WIDTH, HEIGHT = 400, 300
+    if setup.var1.get() == 1:
+        HEIGHT
+        screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN, pygame.SCALED)
+    else:
+        screen = pygame.display.set_mode((WIDTH / scale, HEIGHT / scale), pygame.RESIZABLE)
+
     BUTTON_WIDTH, BUTTON_HEIGHT = 100, 50
     FPS = 60
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
     RED = (255, 0, 0)
     game_time = 7
-    window = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Fast click")
 
     clock = pygame.time.Clock()
@@ -35,7 +48,7 @@ def kiireclick():
 
 
         while game_running:
-            window.fill(WHITE)
+            screen.fill(WHITE)
 
             current_time = pygame.time.get_ticks()
             elapsed_time = current_time - start_time
@@ -44,7 +57,7 @@ def kiireclick():
             if time_left <= 0:
                 game_running = False
 
-            draw_text(f"Time: {time_left:} ms", font, BLACK, window, 10, 10)
+            draw_text(f"Time: {time_left:} ms", font, BLACK, screen, 10, 10)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -57,12 +70,12 @@ def kiireclick():
                     clicked = False
 
             # Draw button
-            pygame.draw.rect(window, RED if clicked else BLACK, button_rect)
-            draw_text("Click", font, WHITE, window, button_rect.x + 20, button_rect.y + 10)
+            pygame.draw.rect(screen, RED if clicked else BLACK, button_rect)
+            draw_text("Click", font, WHITE, screen, button_rect.x + 20, button_rect.y + 10)
 
 
         # Display click count
-            draw_text(f"Clicks: {click_count}", font, BLACK, window, 10, 50)
+            draw_text(f"Clicks: {click_count}", font, BLACK, screen, 10, 50)
 
             pygame.display.flip()
             clock.tick(FPS)
@@ -72,7 +85,4 @@ def kiireclick():
             return "Success"
         pygame.quit()
 
-    print(main())
-
-
-kiireclick()
+    return main()
